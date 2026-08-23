@@ -1,35 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="el">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#16324f" />
+  <meta name="description" content="School House — ενημέρωση μαθητών, απουσίες, δίδακτρα και πληρωμές." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="School House" />
   <title>School House</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
-
 <body>
-  <h1>School House</h1>
-  <p>Η εφαρμογή μας είναι έτοιμη να ξεκινήσει.</p>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import { getAuth } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-    import { getFirestore } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBXE2N125GMbL9nKPOgsKfc2FLJ1HsBmyU",
-      authDomain: "school-house-57188.firebaseapp.com",
-      projectId: "school-house-57188",
-      storageBucket: "school-house-57188.firebasestorage.app",
-      messagingSenderId: "117100890866",
-      appId: "1:117100890866:web:4d13836bdbe6b348ef9e6b",
-      measurementId: "G-DFJSM8B884"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    console.log("School House connected to Firebase");
-  </script>
+  <div id="app">
+    <div class="boot-screen">
+      <div class="brand-mark">SH</div>
+      <strong>School House</strong>
+      <span>Φόρτωση εφαρμογής…</span>
+    </div>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
