@@ -1,11 +1,22 @@
 {
   "name": "School House",
   "short_name": "School House",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
   "background_color": "#f5f8fa",
   "theme_color": "#16324f",
   "lang": "el",
-  "description": "School House — ενημέρωση μαθητών, απουσίες, δίδακτρα και πληρωμές."
+  "description": "School House — ενημέρωση μαθητών, απουσίες, δίδακτρα και πληρωμές.",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
