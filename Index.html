@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School House</title>
+</head>
+
+<body>
+  <h1>School House</h1>
+  <p>Η εφαρμογή μας είναι έτοιμη να ξεκινήσει.</p>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBXE2N125GMbL9nKPOgsKfc2FLJ1HsBmyU",
+      authDomain: "school-house-57188.firebaseapp.com",
+      projectId: "school-house-57188",
+      storageBucket: "school-house-57188.firebasestorage.app",
+      messagingSenderId: "117100890866",
+      appId: "1:117100890866:web:4d13836bdbe6b348ef9e6b",
+      measurementId: "G-DFJSM8B884"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    console.log("School House connected to Firebase");
+  </script>
+</body>
+</html>
