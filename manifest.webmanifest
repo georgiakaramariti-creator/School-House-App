@@ -1,0 +1,11 @@
+{
+  "name": "School House",
+  "short_name": "School House",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f8fa",
+  "theme_color": "#16324f",
+  "lang": "el",
+  "description": "School House — ενημέρωση μαθητών, απουσίες, δίδακτρα και πληρωμές."
+}
