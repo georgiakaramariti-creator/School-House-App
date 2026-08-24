@@ -9,43 +9,36 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="School House" />
   <title>School House</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=3" />
+  <link rel="manifest" href="./manifest.webmanifest?v=4" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon.svg" />
-  <link rel="stylesheet" href="./styles.css?v=3" />
+  <link rel="stylesheet" href="./styles.css?v=4" />
   <style>
-    #forceLogout {
-      position: fixed;
-      right: 16px;
-      bottom: calc(82px + env(safe-area-inset-bottom));
-      z-index: 9999;
-      border: 0;
-      border-radius: 999px;
-      background: #16324f;
-      color: white;
-      font: inherit;
-      font-weight: 700;
-      padding: 12px 16px;
-      box-shadow: 0 8px 28px rgba(22,50,79,.25);
-      display: none;
-    }
+    #forceLogout{position:fixed;right:16px;bottom:calc(82px + env(safe-area-inset-bottom));z-index:9999;border:0;border-radius:999px;background:#16324f;color:#fff;font:inherit;font-weight:700;padding:12px 16px;box-shadow:0 8px 28px rgba(22,50,79,.25);display:none}
   </style>
 </head>
 <body>
-  <div id="app">
-    <div class="boot-screen">
-      <div class="brand-mark">SH</div>
-      <strong>School House</strong>
-      <span>Φόρτωση εφαρμογής…</span>
-    </div>
-  </div>
+  <div id="app"><div class="boot-screen"><div class="brand-mark">SH</div><strong>School House</strong><span>Φόρτωση εφαρμογής…</span></div></div>
   <button id="forceLogout" type="button">Αποσύνδεση</button>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="./app.js?v=3"></script>
-  <script type="module">
-    import { getApps, getApp, initializeApp } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js';
 
+  <script type="module">
+    // Recovery build v4: remove any old service worker/cache before loading the app.
+    try {
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map(r => r.unregister()));
+      }
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+      }
+    } catch (_) {}
+
+    await import('./app.js?build=20260825-v4');
+
+    const { getApps, getApp, initializeApp } = await import('https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js');
+    const { getAuth, onAuthStateChanged, signOut } = await import('https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js');
     const config = {
       apiKey: 'AIzaSyBXE2N125GMbL9nKPOgsKfc2FLJ1HsBmyU',
       authDomain: 'school-house-57188.firebaseapp.com',
@@ -54,27 +47,11 @@
       messagingSenderId: '117100890866',
       appId: '1:117100890866:web:4d13836bdbe6b348ef9e6b'
     };
-
     const firebaseApp = getApps().length ? getApp() : initializeApp(config);
     const auth = getAuth(firebaseApp);
     const btn = document.getElementById('forceLogout');
-    onAuthStateChanged(auth, user => { btn.style.display = user ? 'block' : 'none'; });
-    btn.addEventListener('click', async () => {
-      btn.disabled = true;
-      btn.textContent = 'Αποσύνδεση…';
-      try { await signOut(auth); location.reload(); }
-      finally { btn.disabled = false; btn.textContent = 'Αποσύνδεση'; }
-    });
-  </script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', async () => {
-        try {
-          const reg = await navigator.serviceWorker.register('./sw.js?v=3');
-          reg.update();
-        } catch (_) {}
-      });
-    }
+    onAuthStateChanged(auth,user=>{btn.style.display=user?'block':'none'});
+    btn.addEventListener('click',async()=>{btn.disabled=true;btn.textContent='Αποσύνδεση…';try{await signOut(auth);location.reload()}finally{btn.disabled=false;btn.textContent='Αποσύνδεση'}});
   </script>
 </body>
 </html>
