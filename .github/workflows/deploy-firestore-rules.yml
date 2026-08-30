@@ -35,7 +35,8 @@ jobs:
           python3 - <<'PY'
           import json
           content=open('firestore.rules', encoding='utf-8').read()
-          json.dump({'source': {'files': [{'name':'firestore.rules','content':content}]}}, open('/tmp/ruleset.json','w'))
+          with open('/tmp/ruleset.json','w') as f:
+              json.dump({'source': {'files': [{'name':'firestore.rules','content':content}]}}, f)
           PY
           curl --fail-with-body -sS \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
@@ -53,7 +54,8 @@ jobs:
         run: |
           python3 - <<'PY'
           import json, os
-          json.dump({'name':'projects/school-house-57188/releases/cloud.firestore','rulesetName':os.environ['RULESET_NAME']}, open('/tmp/release.json','w'))
+          with open('/tmp/release.json','w') as f:
+              json.dump({'name':'projects/school-house-57188/releases/cloud.firestore','rulesetName':os.environ['RULESET_NAME']}, f)
           PY
           curl --fail-with-body -sS \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
