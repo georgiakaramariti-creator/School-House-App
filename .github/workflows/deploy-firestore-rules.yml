@@ -5,8 +5,6 @@ on:
     branches: [main]
     paths:
       - 'firestore.rules'
-      - 'firebase.json'
-      - '.firebaserc'
       - '.github/workflows/deploy-firestore-rules.yml'
   workflow_dispatch:
 
@@ -20,12 +18,46 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Authenticate to Google Cloud
+
+      - id: auth
+        name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-          create_credentials_file: true
-          export_environment_variables: true
-      - name: Deploy Firestore rules
-        run: npx --yes firebase-tools@15.22.1 deploy --only firestore:rules --project school-house-57188 --non-interactive
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/cloud-platform
+
+      - name: Create Firestore ruleset
+        env:
+          ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+        run: |
+          python3 - <<'PY'
+          import json
+          content=open('firestore.rules', encoding='utf-8').read()
+          json.dump({'source': {'files': [{'name':'firestore.rules','content':content}]}}, open('/tmp/ruleset.json','w'))
+          PY
+          curl --fail-with-body -sS \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d @/tmp/ruleset.json \
+            "https://firebaserules.googleapis.com/v1/projects/school-house-57188/rulesets" > /tmp/ruleset-response.json
+          cat /tmp/ruleset-response.json
+          RULESET_NAME=$(python3 -c "import json; print(json.load(open('/tmp/ruleset-response.json'))['name'])")
+          echo "RULESET_NAME=$RULESET_NAME" >> "$GITHUB_ENV"
+
+      - name: Release Firestore ruleset
+        env:
+          ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          json.dump({'name':'projects/school-house-57188/releases/cloud.firestore','rulesetName':os.environ['RULESET_NAME']}, open('/tmp/release.json','w'))
+          PY
+          curl --fail-with-body -sS \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "Content-Type: application/json" \
+            -X PATCH \
+            -d @/tmp/release.json \
+            "https://firebaserules.googleapis.com/v1/projects/school-house-57188/releases/cloud.firestore?updateMask=rulesetName"
